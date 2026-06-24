@@ -25,8 +25,8 @@ class Auths extends Controller
             ],401);
         }
 
-        $user = User::where('email', $request->email)->first;
-        $user->tokens->delete();
+        $user = User::where('email', $request->email)->first();
+        $user->tokens()->delete();
         return response()->json([
             'name' => $user->name,
             'email' => $user->email,
@@ -53,10 +53,20 @@ class Auths extends Controller
 
         // $user = User::where('email', $request->email)->first();
         // dd($users);
-        
+
         return response()->json([
             'token' => $users->createToken('signup')->plainTextToken
         ]);
 
+    }
+
+    public function logout(Request $request) {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([],204);
+    }
+
+    public function log_info(Request $request) {
+        return response()->json(User::where('name', $request->user()->name)->get(),200);
     }
 }
