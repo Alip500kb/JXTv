@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('rate')->nullable();
             $table->string('link');
             $table->enum('status', ['online', 'offline'])->default('online');
+            $table->bigInteger('watched')->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
