@@ -12,6 +12,14 @@ class tver extends Controller
         $halaman = $request->header('page', 0);
         $sorts = $request->header('sort', 'created_at');
         $tipe = $request->header('by', 'asc');
+        $id = $request->query('id', );
+        $category = $request->query('catg',);
+        if ($id) {
+            return response()->json(tv_list::where('id',$id)->first());
+        } elseif ($category) {
+            $kats = tv_list::where('category', $category)->get();
+            return response()->json($kats ? $kats : 'kategori tidak ditemukan');
+        }
         return response()->json(tv_list::orderBy($sorts, $tipe)->skip($halaman * 5)->take(5)->get(),200);
     }
 
@@ -25,7 +33,7 @@ class tver extends Controller
             'status' => 'sometimes',
         ]);
 
-        // wajib ada acara,thumb/thumnail, link streaming
+        // wajib ada acara,thumb/thumbnail, link streaming
         // optional category dan status (format enum)
 
         if ($valid->fails()) {
