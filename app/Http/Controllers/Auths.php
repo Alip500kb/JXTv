@@ -66,7 +66,5 @@ class Auths extends Controller
         return response()->json([],204);
     }
 
-    public function log_info(Request $request) {
-        return response()->json(User::where('name', $request->user()->name)->get(),200);
-    }
+    
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('email');
             $table->enum('role',['watcher','mod', 'admin'])->default('watcher');
+            $table->enum('status', ['active', 'banned'])->default('active');
+            $table->string('avatar_url')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

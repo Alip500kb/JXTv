@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class tver extends Controller
 {
+    //memberikan semua hal tentang channel yang akan diberikan ke role watcher
     public function get_all(Request $request) {
         $halaman = $request->header('page', 0);
         $sorts = $request->header('sort', 'created_at');
@@ -15,7 +16,11 @@ class tver extends Controller
         $id = $request->query('id', );
         $category = $request->query('catg',);
         if ($id) {
-            return response()->json(tv_list::where('id',$id)->first());
+            $channel = tv_list::where('id',$id)->first();
+            $channel->update([
+                'watched' => $channel->watched + 1
+            ]);
+            return response()->json();
         } elseif ($category) {
             $kats = tv_list::where('category', $category)->get();
             return response()->json($kats ? $kats : 'kategori tidak ditemukan');
@@ -29,8 +34,9 @@ class tver extends Controller
             'acara' => 'required',
             'thumb' => 'required',
             'category' => 'sometimes',
-            'link' => 'required',
+            'url' => 'required',
             'status' => 'sometimes',
+            'country' => 'sometimes',
         ]);
 
         // wajib ada acara,thumb/thumbnail, link streaming
@@ -46,10 +52,26 @@ class tver extends Controller
             'link' => $request->link,
             'rate' => 0
         ]);
-        $optional = $request->only(['category', 'status']);
+        $optional = $request->only(['category', 'status', 'country']);
         $created->update($optional);
 
-        return response()->json($created,200);
+        return response()->json($created,201);
+    }
+
+    public function tv_rate(Request $request,$id) {
+        $channel = tv_list::where('id', $id)->first();
+        
+        if (!$channel) {
+            return response()->json('apa yang kamu rating bung',404);
+        } elseif ($request->rate > 5) {
+            return response()->json('iam one step ahead',200);
+        }
+
+        $channel->update([
+            'rate' => $request->rating
+        ]);
+
+        return response()->json('berhasil',201);
     }
 
 }
