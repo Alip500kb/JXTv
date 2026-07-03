@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->unique()->autoIncrement();
             $table->string('acara');
             $table->string('thumb')->nullable();
-            $table->enum('catetgory', ['unsorted'])->default('unsorted')->nullable();
+            $table->enum('category', ['unsorted'])->default('unsorted')->nullable();
             $table->bigInteger('rate')->nullable();
             $table->string('url');
             $table->enum('status', ['online', 'offline'])->default('online');

@@ -65,7 +65,7 @@ class tver extends Controller
         $created = tv_list::create([
             'acara' => $request->acara,
             'thumb' => $request->thumb,
-            'link' => $request->link,
+            'url' => $request->url,
             'rate' => 0
         ]);
         $optional = $request->only(['category', 'status', 'country']);
