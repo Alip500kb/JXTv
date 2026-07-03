@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('watch_histories', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->uuid('user_id')->primary();
+            $table->uuid('tv_id');
+            $table->time('duration_watched');
+            $table->timestamp('last_watched_at');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('tv_id')->references('id')->on('tv_lists')->onDelete('cascade');
         });
     }
 

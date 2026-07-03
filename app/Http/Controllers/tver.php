@@ -41,7 +41,7 @@ class tver extends Controller
         } elseif($by_country) {
             return response()->json(tv_list::where('country', $by_country)->random(10)->get());
         }
-        return response()->json(tv_list::random(36));
+        return response()->json(tv_list::random(36));   
     }
 
     public function up_tv(Request $request) {
