@@ -17,7 +17,7 @@ class tv_list extends Model
         'thumb',
         'category',
         'rate',
-        'link',
+        'url',
         'status'
     ];
 }
