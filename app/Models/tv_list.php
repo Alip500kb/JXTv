@@ -18,6 +18,7 @@ class tv_list extends Model
         'category',
         'rate',
         'url',
-        'status'
+        'status',
+        'country',
     ];
 }

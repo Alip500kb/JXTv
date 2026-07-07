@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\tv_list;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 class tver extends Controller
@@ -45,8 +46,9 @@ class tver extends Controller
     }
 
     public function up_tv(Request $request) {
-        // dd($request->all());
-        $valid = Validator::make($request->all(), [
+        // $createds = [];
+        for ($i = 0; $i <= (count($request->all()) - 1) ; $i++) {
+            $valid = Validator::make($request->all()[$i], [
             'acara' => 'required',
             'thumb' => 'required',
             'category' => 'sometimes',
@@ -55,23 +57,33 @@ class tver extends Controller
             'country' => 'sometimes',
         ]);
 
+        if ($valid->fails()) {
+            return response()->json([
+                'error' => $valid->errors(),
+                'array' => $request->all()[$i]
+        ],422);}
+        // dd($request[$i]['acara']);
+        $created = tv_list::create([
+            'acara' => $request->all()[$i]['acara'],
+            'thumb' => $request->all()[$i]['thumb'],
+            'url' => $request->all()[$i]['url'],
+            'rate' => 0
+        ]);
+        $optional = Arr::only($request->all()[$i],[ 'category', 'status', 'country']);
+        // dd($optional);
+        $created->update($optional);
+        // $createds = $created;
+        };
+
+        // dd($request->all());
+ 
         // wajib ada acara,thumb/thumbnail, link streaming
         // optional category dan status (format enum)
 
-        if ($valid->fails()) {
-            return response()->json($valid->errors(),422);
-        }
-
-        $created = tv_list::create([
-            'acara' => $request->acara,
-            'thumb' => $request->thumb,
-            'url' => $request->url,
-            'rate' => 0
-        ]);
-        $optional = $request->only(['category', 'status', 'country']);
-        $created->update($optional);
-
-        return response()->json($created,201);
+        return response()->json([
+            'status' => 'berhasil',
+            'jumlah' => count($request->all())
+        ],201);
     }
 
     public function tv_rate(Request $request,$id) {
