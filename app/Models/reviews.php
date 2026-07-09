@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class reviews extends Model
 {
-    use HasUuids;
 
     protected $fillable = [
         'user_id',
@@ -15,4 +14,7 @@ class reviews extends Model
         'rating',
         'comment'
     ];
+
+    public $incrementing = false;
+    protected $primaryKey = 'user_id';
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('acara');
             $table->string('thumb')->nullable();
             $table->enum('category', ['unsorted'])->default('unsorted')->nullable();
-            $table->bigInteger('rate')->nullable();
+            $table->float('rate')->nullable();
             $table->string('url');
             $table->enum('status', ['online', 'offline'])->default('online');
             $table->bigInteger('watched')->nullable()->default(0);
