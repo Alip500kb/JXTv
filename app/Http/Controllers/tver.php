@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\reviews;
 use App\Models\tv_list;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -49,8 +50,8 @@ class tver extends Controller
         // $createds = [];
         for ($i = 0; $i <= (count($request->all()) - 1) ; $i++) {
             $valid = Validator::make($request->all()[$i], [
-            'acara' => 'required',
-            'thumb' => 'required',
+            'name' => 'required',
+            'image' => 'required',
             'category' => 'sometimes',
             'url' => 'required',
             'status' => 'sometimes',
@@ -64,8 +65,8 @@ class tver extends Controller
         ],422);}
         // dd($request[$i]['acara']);
         $created = tv_list::create([
-            'acara' => $request->all()[$i]['acara'],
-            'thumb' => $request->all()[$i]['thumb'],
+            'acara' => $request->all()[$i]['name'],
+            'thumb' => $request->all()[$i]['image'],
             'url' => $request->all()[$i]['url'],
             'rate' => 0
         ]);
@@ -87,19 +88,50 @@ class tver extends Controller
     }
 
     public function tv_rate(Request $request,$id) {
-        $channel = tv_list::where('id', $id)->first();
-        
-        if (!$channel) {
-            return response()->json('apa yang kamu rating bung',404);
-        } elseif ($request->rate > 5) {
-            return response()->json('iam one step ahead',200);
+        $valid = Validator::make($request->all(), [
+            'rate' => 'required|numeric',
+            'comment' => 'sometimes'
+        ]);
+
+        // dd($request->user()->id);
+
+        if ($valid->fails()) {
+            return response()->json($valid->errors(),422);
         }
 
+        $channel = tv_list::where('id', $id)->first();
+        $cek = reviews::where('user_id', $request->user()->id)->first();
+        if (!$channel) {
+            return response()->json('apa yang kamu rating bung',404);
+        } elseif (($request->rate > 5) || ($request->rate < 1)) {
+            return response()->json('iam one step ahead',200);
+        } elseif ($cek) {
+            $cek->update([
+                'rating' => $request->rate
+            ]);
+            $comment = $request->only('comment');
+            $cek->update($comment);
+            $channel->update([
+                'rate' => reviews::where('tv_id', $id)->get()->average('rating')
+            ]);
+            
+            return response()->json('berhasil',201);
+        }
+
+        $rview = reviews::create([
+            'user_id' => $request->user()->id,
+            'tv_id' => $id,
+            'rating' => $request->rate
+        ]);
+        
+        $comment = $request->only('comment');
+        $rview->update($comment);
+
         $channel->update([
-            'rate' => $request->rating
+            'rate' => reviews::where('tv_id',$id)->get()->average('rating'),
         ]);
 
         return response()->json('berhasil',201);
     }
-
+        
 }

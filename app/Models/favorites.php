@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class favorites extends Model
 {
-    use HasUuids;
 
     protected $fillable = [
         'user_id',

@@ -15,4 +15,4 @@ Route::get('/logout', [Auths::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/user_info', [user_manager::class, 'user_info'])->middleware('auth:sanctum');
 Route::get('/tv', [tver::class, 'get_all'])->middleware('throttle:36,1');
 Route::post('/tv', [tver::class, 'up_tv']);
-Route::post('/tv_rate/{$id}', [tver::class, 'tv_rate'])->middleware(['auth:sanctum','throttle:6,1']);
+Route::post('/tv_rate/{id}', [tver::class, 'tv_rate'])->middleware(['auth:sanctum','throttle:6,1']);    
