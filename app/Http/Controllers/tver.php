@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\favorites;
 use App\Models\reviews;
 use App\Models\tv_list;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use function PHPUnit\Framework\isBool;
 
 class tver extends Controller
 {
@@ -132,6 +134,33 @@ class tver extends Controller
         ]);
 
         return response()->json('berhasil',201);
+    }
+
+    public function favorite(Request $request, $id) {
+        $valid = Validator::make($request->all(),[
+            'fav' => 'required|boolean'
+        ]); 
+
+        $fav = favorites::where('user_id', $request->user()->id)->first();
+
+        if ($valid->fails()) {
+            return response()->json($valid->errors(),422);
+        } elseif (($fav) && ($request->fav == false)) {
+            $fav->delete();
+            return response()->json([],204);
+        } elseif (!tv_list::where('id', $id)->exists()) {
+            return response()->json('channel tidak ditemukan',404);
+        } elseif ($fav) {
+            return response()->json();
+        }
+
+        favorites::create([
+            'user_id' => $request->user()->id,
+            'tv_id' => $id
+        ]);
+
+        return response()->json('berhasil',201);
+        
     }
         
 }

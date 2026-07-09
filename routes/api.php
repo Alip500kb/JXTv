@@ -16,3 +16,4 @@ Route::get('/user_info', [user_manager::class, 'user_info'])->middleware('auth:s
 Route::get('/tv', [tver::class, 'get_all'])->middleware('throttle:36,1');
 Route::post('/tv', [tver::class, 'up_tv']);
 Route::post('/tv_rate/{id}', [tver::class, 'tv_rate'])->middleware(['auth:sanctum','throttle:6,1']);    
+Route::post('/fav/{id}', [tver::class, 'favorite'])->middleware('auth:sanctum');

@@ -12,4 +12,8 @@ class favorites extends Model
         'user_id',
         'tv_id'
     ];
+
+    public $incrementing = false;
+    public $timestamps = false;
+    protected $primaryKey = 'user_id';
 }
