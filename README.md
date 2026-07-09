@@ -6,3 +6,12 @@ Welcome to JXTV, a completely free, browser-based live television streaming plat
 ## Status
 
 Masih bergelut dengan aplikasi biru (fesbuk).
+
+## progress
+
+<ul>
+    <li>Testing on multiple data uploading, so can recieve batch of json</li>
+    <li>fully functionally getting some data</li>
+    <li>working on recommended channel by category or just random</li>
+    <li>search by name of the channel </li>
+</ul>
