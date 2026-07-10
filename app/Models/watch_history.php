@@ -14,6 +14,9 @@ class watch_history extends Model
         'tv_id',
         'duration_watched',
         'last_watched_at',
-        
     ];  
+
+    public $incrementing = false;
+    protected $primaryKey = 'user_id';
+    public $timestamps = false;
 }

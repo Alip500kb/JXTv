@@ -20,6 +20,7 @@ class tv_list extends Model
         'url',
         'status',
         'country',
-        'updated_at'
+        'updated_at',
+        'watched'
     ];
 }

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\favorites;
 use App\Models\reviews;
 use App\Models\tv_list;
+use App\Models\watch_history;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use function PHPUnit\Framework\isBool;
 
@@ -23,10 +25,24 @@ class tver extends Controller
         $country = $request->query('country',);
         if ($id) {
             $channel = tv_list::where('id',$id)->first();
+            $user = $request->user('sanctum');
             $channel->update([
                 'watched' => $channel->watched + 1
             ]);
-            return response()->json();
+            $watched = watch_history::where('user_id', $user->id)->first();
+            if ($user && !$watched) {
+                watch_history::create([
+                'user_id' => $user->id,
+                'tv_id' => $id,
+                'duration_watched' => 0,
+                'last_watched_at' => Carbon::now()
+            ]);
+            } else {
+                $watched->update([
+                    'last_watched_at' => Carbon::now()
+                ]);
+            }
+            return response()->json($channel);
         } elseif ($category) {
             $kats = tv_list::where('category', $category)->get();
             $country ? $kats->where('country', $country) : $kats;
@@ -35,6 +51,12 @@ class tver extends Controller
             return response()->json(tv_list::where('country', $country)->get());
         }
         return response()->json(tv_list::orderBy($sorts, $tipe)->skip($halaman * 5)->take(5)->get(),200);
+    }
+
+    public function add_duration_watch(Request $request,$id) {
+        watch_history::where('user_id', $request->user()->id)->where('tv_id', $id)->first()->update([
+            'duration_watched' => DB::raw("ADDTIME(duration_watched, '00:01:00')")
+        ]);
     }
 
     public function get_recommend(Request $request) {
@@ -183,5 +205,5 @@ class tver extends Controller
             'data' => $tv
         ]);
     }
-        
+     
 }
