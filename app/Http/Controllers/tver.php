@@ -39,13 +39,16 @@ class tver extends Controller
     public function get_recommend(Request $request) {
         $by_country = $request->header('country',);
         $by_category = $request->header('category',);
+        $by_rating = $request->header('rated');
 
         if ($by_category) {
-            return response()->json(tv_list::where('category', $by_category)->random(10)->get());
+            return response()->json(tv_list::where('category', $by_category)->inRandomOrder()->take(6)->get());
         } elseif($by_country) {
-            return response()->json(tv_list::where('country', $by_country)->random(10)->get());
+            return response()->json(tv_list::where('country', $by_country)->orderBy('rate', 'desc')->take(6)->get());
+        } elseif($by_rating) {
+            return response()->json(tv_list::orderBy('rate', 'desc')->take(10)->get());
         }
-        return response()->json(tv_list::random(36));   
+        return response()->json(tv_list::inRandomOrder()->limit(19)->get());   
     }
 
     public function up_tv(Request $request) {
@@ -162,5 +165,6 @@ class tver extends Controller
         return response()->json('berhasil',201);
         
     }
+
         
 }
