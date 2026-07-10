@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\favorites;
 use App\Models\reviews;
 use App\Models\tv_list;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -166,5 +167,21 @@ class tver extends Controller
         
     }
 
+    public function tv_edit(Request $request,$id) {
+        $tv = tv_list::where('id', $id)->first();
+        if (!$tv) {
+            return response()->json('tidak ditemukan',404);
+        }
+        $opsi = $request->only(['acara','thumb','category','country']);
+        $tv->update($opsi);
+        $tv->update([
+            'updated_at' => Carbon::now()
+        ]);
+
+        return response()->json([
+            'status' => 'berhasil',
+            'data' => $tv
+        ]);
+    }
         
 }
