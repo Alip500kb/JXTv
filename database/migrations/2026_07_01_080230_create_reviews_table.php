@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reviews', function (Blueprint $table) {
-            $table->uuid('user_id')->primary();
+            $table->uuid('id')->primary()->unique()->autoIncrement();
+            $table->uuid('user_id');
             $table->uuid('tv_id');
             $table->integer('rating');
             $table->text('comment')->nullable();

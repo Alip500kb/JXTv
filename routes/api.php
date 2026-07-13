@@ -20,3 +20,5 @@ Route::post('/fav/{id}', [tver::class, 'favorite'])->middleware(['auth:sanctum',
 Route::get('/recommend', [tver::class, 'get_recommend'])->middleware(['auth:sanctum', 'throttle:36,1']);
 Route::patch('/tv/{id}', [tver::class, 'tv_edit'])->middleware('auth:sanctum'); //admin only 
 Route::patch('/add_time/{id}', [tver::class, 'add_duration_watch'])->middleware('auth:sanctum');
+Route::delete('/history', [tver::class, 'rm_history'])->middleware('auth:sanctum');
+Route::delete('/tv_rate', [tver::class, 'rm_review'])->middleware('auth:sanctum'); //butuh request id komentar atau review

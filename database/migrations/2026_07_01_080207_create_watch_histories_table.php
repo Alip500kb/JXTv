@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('watch_histories', function (Blueprint $table) {
-            $table->uuid('user_id')->primary();
+            $table->uuid('id')->autoIncrement()->unique();
+            $table->uuid('user_id');
             $table->uuid('tv_id');
             $table->time('duration_watched');
             $table->timestamp('last_watched_at');

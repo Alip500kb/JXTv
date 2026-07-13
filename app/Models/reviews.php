@@ -15,6 +15,4 @@ class reviews extends Model
         'comment'
     ];
 
-    public $incrementing = false;
-    protected $primaryKey = 'user_id';
 }
