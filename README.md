@@ -13,5 +13,5 @@ Masih bergelut dengan aplikasi biru (fesbuk).
     <li>Testing on multiple data uploading, so can recieve batch of json</li>
     <li>fully functionally getting some data</li>
     <li>working on recommended channel by category or just random</li>
-    <li>search by name of the channel </li>
+    <li>search by name of the channels </li>
 </ul>
