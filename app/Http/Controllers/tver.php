@@ -29,7 +29,7 @@ class tver extends Controller
             $channel->update([
                 'watched' => $channel->watched + 1
             ]);
-            $watched = watch_history::where('user_id', $user->id)->first();
+            $watched = watch_history::where('user_id', $user->id)->where('tv_id', $id)->first();
             if ($user && !$watched) {
                 watch_history::create([
                 'user_id' => $user->id,
@@ -58,6 +58,17 @@ class tver extends Controller
             'duration_watched' => DB::raw("ADDTIME(duration_watched, '00:01:00')")
         ]);
     }
+
+    public function rm_history(Request $request) {
+        $user = $request->user()->id;
+        watch_history::where('user_id',$user)->delete();
+        return response()->json([],204);
+    }
+
+    public function rm_review(Request $request) {
+        reviews::where('id',$request->id)->delete();
+        return response()->json([],204);
+    } 
 
     public function get_recommend(Request $request) {
         $by_country = $request->header('country',);

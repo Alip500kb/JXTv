@@ -16,7 +16,5 @@ class watch_history extends Model
         'last_watched_at',
     ];  
 
-    public $incrementing = false;
-    protected $primaryKey = 'user_id';
     public $timestamps = false;
 }
