@@ -14,4 +14,5 @@ Masih bergelut dengan aplikasi biru (fesbuk).
     <li>fully functionally getting some data</li>
     <li>working on recommended channel by category or just random</li>
     <li>search by name of the channels </li>
+    <li>Hijau</li>
 </ul>
