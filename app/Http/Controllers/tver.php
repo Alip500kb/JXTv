@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use function PHPUnit\Framework\isBool;
 
 class tver extends Controller
 {
@@ -29,7 +28,10 @@ class tver extends Controller
             $channel->update([
                 'watched' => $channel->watched + 1
             ]);
-            $watched = watch_history::where('user_id', $user->id)->where('tv_id', $id)->first();
+            $watched= [];
+            if ($user) {
+                $watched = watch_history::where('user_id', $user->id)->where('tv_id', $id)->first();
+            }
             if ($user && !$watched) {
                 watch_history::create([
                 'user_id' => $user->id,
@@ -37,7 +39,7 @@ class tver extends Controller
                 'duration_watched' => 0,
                 'last_watched_at' => Carbon::now()
             ]);
-            } else {
+            } elseif ($watched) {
                 $watched->update([
                     'last_watched_at' => Carbon::now()
                 ]);
@@ -66,9 +68,13 @@ class tver extends Controller
     }
 
     public function rm_review(Request $request) {
-        reviews::where('id',$request->id)->delete();
+        $ripiw = reviews::where('id',$request->id)->first();
+        if (($request->user()->role == "watcher") && ($ripiw->user_id != $request->user()->id)) {
+            return response()->json('aja sendiri',403);
+        }
+        $ripiw->delete();
         return response()->json([],204);
-    } 
+    }
 
     public function get_recommend(Request $request) {
         $by_country = $request->header('country',);
@@ -82,7 +88,7 @@ class tver extends Controller
         } elseif($by_rating) {
             return response()->json(tv_list::orderBy('rate', 'desc')->take(10)->get());
         }
-        return response()->json(tv_list::inRandomOrder()->limit(19)->get());   
+        return response()->json(tv_list::inRandomOrder()->limit(19)->get());
     }
 
     public function up_tv(Request $request) {
@@ -116,7 +122,7 @@ class tver extends Controller
         };
 
         // dd($request->all());
- 
+
         // wajib ada acara,thumb/thumbnail, link streaming
         // optional category dan status (format enum)
 
@@ -153,7 +159,7 @@ class tver extends Controller
             $channel->update([
                 'rate' => reviews::where('tv_id', $id)->get()->average('rating')
             ]);
-            
+
             return response()->json('berhasil',201);
         }
 
@@ -162,7 +168,7 @@ class tver extends Controller
             'tv_id' => $id,
             'rating' => $request->rate
         ]);
-        
+
         $comment = $request->only('comment');
         $rview->update($comment);
 
@@ -176,9 +182,9 @@ class tver extends Controller
     public function favorite(Request $request, $id) {
         $valid = Validator::make($request->all(),[
             'fav' => 'required|boolean'
-        ]); 
+        ]);
 
-        $fav = favorites::where('user_id', $request->user()->id)->first();
+        $fav = favorites::where('user_id', $request->user()->id)->where('tv_id', $id)->first();
 
         if ($valid->fails()) {
             return response()->json($valid->errors(),422);
@@ -197,7 +203,7 @@ class tver extends Controller
         ]);
 
         return response()->json('berhasil',201);
-        
+
     }
 
     public function tv_edit(Request $request,$id) {
@@ -216,5 +222,5 @@ class tver extends Controller
             'data' => $tv
         ]);
     }
-     
+
 }

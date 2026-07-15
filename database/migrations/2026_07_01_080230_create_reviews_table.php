@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reviews', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique()->autoIncrement();
+            $table->uuid('id')->primary()->autoIncrement();
             $table->uuid('user_id');
             $table->uuid('tv_id');
             $table->integer('rating');

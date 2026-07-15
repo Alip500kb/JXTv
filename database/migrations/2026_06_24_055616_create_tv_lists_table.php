@@ -15,10 +15,30 @@ return new class extends Migration
             $table->uuid('id')->unique()->autoIncrement();
             $table->string('acara');
             $table->string('thumb')->nullable();
-            $table->enum('category', ['unsorted'])->default('unsorted')->nullable();
             $table->float('rate')->nullable();
             $table->string('url');
-            $table->enum('status', ['online', 'offline'])->default('online');
+            $table->enum('status',['online','offline']);
+             $table->enum('category', [
+    'unsorted',
+    'News',
+    'Sports',
+    'Entertainment',
+    'Movies',
+    'Music',
+    'Kids',
+    'Documentary',
+    'Education',
+    'Lifestyle',
+    'Religion',
+    'Business',
+    'Technology',
+    'Travel',
+    'Cooking',
+    'Gaming',
+    'Animation',
+    'Reality',
+    'Talk Show'
+])->default('unsorted')->nullable();
             $table->bigInteger('watched')->nullable()->default(0);
             $table->string('country')->nullable();
             $table->timestamps();
