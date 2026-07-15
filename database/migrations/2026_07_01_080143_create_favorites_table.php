@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('favorites', function (Blueprint $table) {
-            $table->uuid('user_id')->primary();
+            $table->uuid('user_id');
             $table->uuid('tv_id')->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('tv_id')->references('id')->on('tv_lists')->onDelete('cascade');
