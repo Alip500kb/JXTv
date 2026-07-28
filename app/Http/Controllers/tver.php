@@ -223,4 +223,12 @@ class tver extends Controller
         ]);
     }
 
+    public function get_user_histories(Request $request) {
+        $user = $request->header('id', $request->user()->id);
+        if (($request->user()->role == 'wathcer') && ($request->user()->id != $user)) {
+            return response()->json('you dont have to do that',403);
+        }
+        return response()->json(watch_history::where('user_id', $user)->get(),200);
+    }
+
 }
